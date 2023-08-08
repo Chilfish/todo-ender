@@ -4,5 +4,8 @@
       "source": "/api/(.*)",
       "destination": "/api"
     }
-  ]
+  ],
+  "api/*.js": {
+       "includeFiles": "./_utils.js" 
+    }
 }

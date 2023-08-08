@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { add } from './_utils'
+import { add } from './_utils.js'
 
 export default function handler(
   req: VercelRequest,

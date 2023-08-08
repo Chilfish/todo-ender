@@ -4,29 +4,27 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "preserve",
+    "forceConsistentCasingInFileNames": true, 
     "lib": [
       "DOM",
       "ESNext"
     ],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noUnusedLocals": true,
     "outDir": "dist",
     "paths": {
       "~/*": [
         "src/*"
-      ]
+      ], 
     },
-    "resolveJsonModule": true,
-    "rootDir": ".",
+    "resolveJsonModule": true, 
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": true,
     "target": "esnext",
-    "types": []
+    "types": [],
   },
   "exclude": [
     "dist",
