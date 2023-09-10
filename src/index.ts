@@ -1,23 +1,30 @@
+import process from 'node:process'
 import express from 'express'
-import { sum } from 'lodash-es'
+import cors from 'cors'
+import 'dotenv/config'
+
+import todoRouter from './router'
+
+const {
+  PORT = 3000,
+} = process.env
 
 const app = express()
+app
+  .use(cors())
+  .use(express.json())
+  .use(express.urlencoded({ extended: true }))
+  .use(express.static('public'))
 
-interface User {
-  name: string
-  age: number
-}
+app
+  .get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+  .get('/api', (req, res) => {
+    res.json({ message: 'hello api' })
+  })
+  .use('/api/todos', todoRouter)
 
-app.get('/', (req, res) => {
-  res.send(`1 + 1 = ${sum([1, 1])}`)
-})
-
-app.get('/hello', (req, res) => {
-  const { name, age } = req.query as unknown as User
-
-  res.json({ name, age })
-})
-
-app.listen(3003, () => {
-  console.log(`Server is running at http://localhost:${3003}`)
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}/`)
 })

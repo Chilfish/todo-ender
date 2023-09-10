@@ -6,25 +6,23 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": [
-      "DOM",
       "ESNext"
     ],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "noUnusedLocals": true,
     "outDir": "dist",
     "paths": {
-      "~/*": [
-        "src/*"
-      ]
+      "~/*": ["src/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": true,
     "strictNullChecks": true,
     "target": "esnext",
-    "types": []
+    "types": [],
+    "noEmit": true
   },
   "exclude": [
     "dist",
