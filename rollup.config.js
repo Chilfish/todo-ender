@@ -22,5 +22,7 @@ export default {
   ],
   external: [
     'express',
+    'mysql2',
+    'cors',
   ],
 }

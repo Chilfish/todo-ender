@@ -21,7 +21,9 @@ export default async function build() {
   await fs.remove(path.resolve(root, 'dist'))
 
   exec('pnpm build:rollup', { stdio: 'inherit' })
+
   await genPackJson()
+  await fs.copyFile(path.resolve(root, '.env.example'), path.resolve(root, 'dist/.env'))
 }
 
 build()

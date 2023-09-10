@@ -92,8 +92,8 @@ const todoRouter = Router()
 todoRouter
   .get('/', getTodos)
   .get('/:id', getTodoById)
-  .post('/', addTodo)
-  .delete('/', rmTodo)
-  .put('/', upTodo)
+  .post('/add', addTodo)
+  .post('/rm', rmTodo)
+  .post('/up', upTodo)
 
 export default todoRouter
