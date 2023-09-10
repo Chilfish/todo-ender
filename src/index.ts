@@ -4,6 +4,7 @@ import cors from 'cors'
 import 'dotenv/config'
 
 import todoRouter from './router'
+import { log } from './utils'
 
 const {
   PORT = 3000,
@@ -26,5 +27,5 @@ app
   .use('/api/todos', todoRouter)
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}/`)
+  log(`Server is running on http://localhost:${PORT}/`)
 })
