@@ -19,5 +19,5 @@ pnpm build
 pnpm install
 
 # set env variables, then
-node index.cjs
+node index.mjs
 ```

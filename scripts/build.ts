@@ -19,7 +19,7 @@ async function genPackJson() {
 
   Object.keys(packageJson)
     .forEach((key) => {
-      if (!['devDependencies', 'scripts', 'type', 'simple-git-hooks', 'lint-staged', 'eslintConfig']
+      if (!['devDependencies', 'scripts', 'simple-git-hooks', 'lint-staged', 'eslintConfig']
         .includes(key)
       )
         rest[key] = packageJson[key]
