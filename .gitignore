@@ -27,3 +27,4 @@ components.d.ts
 src/mock/mock.ts
 
 .vercel
+out/
