@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, '../../')
 // remove devDependencies
 async function genPackJson() {
   const packageJson = await fs.readJson(path.resolve(root, 'package.json'))
-  const { devDependencies, scripts, eslintConfig, ...rest } = packageJson
+  const { devDependencies, scripts, eslintConfig, type, ...rest } = packageJson
 
   await fs.writeJson(path.resolve(root, 'dist/package.json'), rest, {
     spaces: 2,
