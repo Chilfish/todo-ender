@@ -6,7 +6,7 @@ import { assertParams, log } from './utils'
 
 async function getTodos(req: Request, res: Response) {
   db
-    .query<TodoSQL>(`SELECT * FROM ${TABLE} ORDER BY updated_at DESC`)
+    .query<TodoSQL>(`SELECT * FROM ${TABLE} WHERE deleted = 0 ORDER BY updated_at DESC`)
     .then(([rows]) => {
       res.json({
         data: rows,
@@ -16,7 +16,10 @@ async function getTodos(req: Request, res: Response) {
     })
     .catch((err) => {
       log(`${err.message}`, 'error')
-      res.status(500).json({ message: err.message })
+      res.status(500).json({
+        message: err.message,
+        status: 'error',
+      })
     })
 }
 
@@ -32,14 +35,17 @@ async function getTodoById(req: Request, res: Response) {
     .query<TodoSQL>(sqlStr)
     .then(([rows]) => {
       res.json({
-        data: rows,
+        data: rows[0],
         count: rows.length,
         status: 'success',
       })
     })
     .catch((err) => {
       log(`${err.message}, SQL: ${sqlStr}`, 'error')
-      res.status(500).json({ message: err.message })
+      res.status(500).json({
+        message: err.message,
+        status: 'error',
+      })
     })
 }
 
@@ -52,25 +58,29 @@ async function addTodo(req: Request, res: Response) {
 
   db
     .query<ResultSetHeader>(sqlStr)
-    .then(([rows]) => {
+    .then(async ([rows]) => {
+      const [todo] = await db.query<TodoSQL>(`SELECT * FROM ${TABLE} WHERE id = ${rows.insertId}`)
       res.json({
         status: 'success',
-        data: rows.affectedRows,
+        data: todo[0],
       })
     })
     .catch((err) => {
       log(`${err.message}, SQL: ${sqlStr}`, 'error')
-      res.status(500).json({ message: err.message })
+      res.status(500).json({
+        message: err.message,
+        status: 'error',
+      })
     })
 }
 
 async function rmTodo(req: Request, res: Response) {
-  const id = req.params.id
+  const id = req.body.id
 
   if (!assertParams({ id }, res))
     return
 
-  const sqlStr = `DELETE FROM ${TABLE} WHERE id = ${id}`
+  const sqlStr = `UPDATE ${TABLE} SET deleted = 1 WHERE id = ${id}`
 
   db
     .query<ResultSetHeader>(sqlStr)
@@ -82,7 +92,10 @@ async function rmTodo(req: Request, res: Response) {
     })
     .catch((err) => {
       log(`${err.message}, SQL: ${sqlStr}`, 'error')
-      res.status(500).json({ message: err.message })
+      res.status(500).json({
+        message: err.message,
+        status: 'error',
+      })
     })
 }
 
@@ -103,7 +116,10 @@ async function upTodo(req: Request, res: Response) {
     })
     .catch((err) => {
       log(`${err.message}, SQL: ${sqlStr}`, 'error')
-      res.status(500).json({ message: err.message })
+      res.status(500).json({
+        message: err.message,
+        status: 'error',
+      })
     })
 }
 
