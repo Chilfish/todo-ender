@@ -9,3 +9,15 @@ pnpm install
 
 pnpm dev
 ```
+
+### Run in production
+
+```bash
+pnpm build
+
+# then in dist
+pnpm install
+
+# set env variables, then
+node index.cjs
+```

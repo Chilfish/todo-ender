@@ -35,9 +35,6 @@ export const db = createPool({
   keepAliveInitialDelay: 0,
 })
   .promise()
-  .addListener('error', (error) => {
-    console.log('database connect fail', error)
-  })
 
 db
   .query(initDB)
@@ -45,7 +42,7 @@ db
     console.log('database connect success')
   })
   .catch((err) => {
-    console.log(err.message)
+    console.log('database connect fail: ', err.message)
   })
 
 export default db
