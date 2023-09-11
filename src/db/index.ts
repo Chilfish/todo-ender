@@ -1,6 +1,7 @@
 import process from 'node:process'
 import { createPool } from 'mysql2'
-import { initDB as initTodo } from './todo'
+import { initUserDB } from './user'
+import { initTodoDB } from './todo'
 import { log } from '~/utils'
 import 'dotenv/config'
 
@@ -27,13 +28,28 @@ export const db = createPool({
 })
   .promise()
 
-db
-  .query(initTodo)
-  .then(() => {
-    log('database connect success')
-  })
-  .catch((err) => {
-    log(`database connect fail: ${err.message}`, 'error')
-  })
+export async function initDB() {
+  try {
+    await Promise.all([
+      db.query(initUserDB),
+      db.query(initTodoDB),
+    ])
+
+    log('Database connected')
+  }
+  catch (error: any) {
+    log(`Database connected failed: ${error.message}`, 'error')
+  }
+}
+
+export async function closeDB() {
+  try {
+    await db.end()
+    log('Database closed')
+  }
+  catch (error: any) {
+    log(`Database closing failed: ${error.message}`, 'error')
+  }
+}
 
 export default db
