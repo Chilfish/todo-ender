@@ -11,16 +11,25 @@ const {
   MYSQL_PASS = '123456',
   MYSQL_HOST = 'localhost',
   MYSQL_DB = 'todos',
+  MYSQL_SSL = 'false',
 } = process.env
+
+const ssl = MYSQL_SSL === 'true'
+  ? {
+      minVersion: 'TLSv1.2',
+      rejectUnauthorized: true,
+    }
+  : undefined
 
 export const db = createPool({
   host: MYSQL_HOST,
   user: MYSQL_USER,
   password: MYSQL_PASS,
   database: MYSQL_DB,
-  port: MYSQL_PORT as number,
+  port: Number(MYSQL_PORT),
 
   namedPlaceholders: true,
+  ssl,
 })
   .promise()
 
