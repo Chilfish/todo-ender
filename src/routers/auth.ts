@@ -2,7 +2,7 @@ import { type Request, type Response, Router } from 'express'
 import type { ResultSetHeader } from 'mysql2/promise'
 import db from '~/db'
 import { addUserSQL, authUserSQL, getUserSQL } from '~/db/user'
-import { userWithToken, verifyToken } from '~/utils/token'
+import { userWithToken } from '~/utils/token'
 import { assertParams, log } from '~/utils'
 import type { UserAuth, UserWithPasswordSQL } from '~/types'
 
@@ -44,8 +44,6 @@ async function register(req: Request, res: Response) {
     .then(async ([rows]) => {
       const [user] = await db.query<UserWithPasswordSQL>(getUserSQL, [rows.insertId])
 
-      log({ user, username, password }, 'info')
-
       const data = await userWithToken(user[0])
       res.json(data)
     })
@@ -58,37 +56,9 @@ async function register(req: Request, res: Response) {
     })
 }
 
-// just test
-async function getUser(req: Request, res: Response) {
-  // bearer token
-  const token = req.headers.authorization?.split(' ')[1].trim()
-
-  if (!assertParams({ token }, res))
-    return
-
-  try {
-    const {
-      payload: { id, username },
-    } = await verifyToken(token!)
-
-    res.json({
-      data: { id, username },
-      status: 'success',
-    })
-  }
-  catch (error: any) {
-    log(`getUser, ${error.message}`, 'error')
-    return res.status(401).json({
-      message: error.message,
-      status: 'error',
-    })
-  }
-}
-
 const authRouter = Router()
 
 authRouter
-  .get('/', getUser)
   .post('/login', authUser)
   .post('/register', register)
 

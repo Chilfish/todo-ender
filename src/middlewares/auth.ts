@@ -15,11 +15,9 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
     return res.status(401).json({ message: 'Unauthorized' })
 
   try {
-    const {
-      payload: { id },
-    } = await verifyToken(token!)
+    const { id } = await verifyToken(token!)
     req.body.uid = id
-    uid = id as number
+    uid = id
   }
   catch (error: any) {
     log(`auth, ${error.message}`, 'error')

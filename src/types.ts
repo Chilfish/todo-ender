@@ -1,4 +1,3 @@
-import type { Request } from 'express'
 import type { RowDataPacket } from 'mysql2/promise'
 
 export interface Todo {
@@ -34,5 +33,3 @@ export interface UserAuth {
 export type UserSQL = User[] & RowDataPacket[]
 
 export type UserWithPasswordSQL = UserWithPassword[] & RowDataPacket[]
-
-export type RequestWithUID = Request & { uid: number }

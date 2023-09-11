@@ -30,3 +30,4 @@ src/mock/mock.ts
 out/
 
 .env
+*.pem

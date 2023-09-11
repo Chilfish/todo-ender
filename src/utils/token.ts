@@ -1,32 +1,26 @@
-import process from 'node:process'
-import { SignJWT, jwtVerify } from 'jose'
+import { Buffer } from 'node:buffer'
+import { CompactSign, compactVerify } from 'jose'
+import { alg, getKeys } from './keys'
 import type { UserWithPassword } from '~/types'
 
-const {
-  HOST = 'localhost:3000',
-  SECRET = 'secret',
-} = process.env
-
-const secret = new TextEncoder().encode(SECRET)
-
-const issuer = HOST
-const audience = HOST
+const { ecPrivateKey, ecPublicKey } = await getKeys()
+const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30
 
 export async function createToken(payload: any) {
-  return new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setIssuer(issuer)
-    .setAudience(audience)
-    .setExpirationTime('12h')
-    .sign(secret)
+  return await new CompactSign(
+    Buffer.from(JSON.stringify(payload), 'utf8'),
+  )
+    .setProtectedHeader({ alg, exp })
+    .sign(ecPrivateKey)
 }
 
 export async function verifyToken(token: string) {
-  return jwtVerify(token, secret, {
-    issuer,
-    audience,
-  })
+  const { payload } = await compactVerify(token, ecPublicKey)
+
+  return JSON.parse(payload.toString()) as {
+    id: number
+    username: string
+  }
 }
 
 export async function userWithToken(user: UserWithPassword) {
