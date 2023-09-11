@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execSync as exec } from 'node:child_process'
 import fs from 'fs-extra'
+import { log } from '../src/utils'
 
 const __dirname = fileURLToPath(import.meta.url)
 const root = path.resolve(__dirname, '../../')
@@ -40,7 +41,7 @@ async function copy() {
 }
 
 export default async function build() {
-  console.log('build start')
+  log('build start')
   await fs.remove(path.resolve(root, 'dist'))
 
   exec('pnpm build:rollup', { stdio: 'inherit' })

@@ -12,7 +12,6 @@ app
   .use(express.json())
   .use(express.urlencoded({ extended: true }))
   .use(express.static('public'))
-  .use(auth)
 
 app
   .get('/', (req: Request, res: Response) => {
@@ -21,6 +20,7 @@ app
   .get('/api', (req: Request, res: Response) => {
     res.json({ message: 'hello api' })
   })
+  .use('/api', auth)
   .use('/api/todos', todoRouter)
   .use('/api/auth', authRouter)
 

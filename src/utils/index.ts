@@ -1,6 +1,7 @@
 import type { Response } from 'express'
 
 export * from './token'
+export * from './keys'
 
 export function log(
   message: string | Record<string, unknown>,
