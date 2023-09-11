@@ -2,6 +2,7 @@ export const TABLE_TODO = 'todos'
 
 export const initTodoDB = `CREATE TABLE IF NOT EXISTS ${TABLE_TODO} (
   id INT NOT NULL AUTO_INCREMENT,
+  uid INT NOT NULL,
   text VARCHAR(255) NOT NULL,
   completed BOOLEAN NOT NULL DEFAULT FALSE,
   deleted BOOLEAN NOT NULL DEFAULT FALSE,
@@ -12,14 +13,26 @@ export const initTodoDB = `CREATE TABLE IF NOT EXISTS ${TABLE_TODO} (
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 `
 
-export const addTodoSQL = `INSERT INTO ${TABLE_TODO} (text) VALUES (?)`
+export const addTodoSQL = `INSERT INTO ${TABLE_TODO} (text, uid) VALUES (?, ?);`
 
-export const getTodoSQL = `SELECT * FROM ${TABLE_TODO} WHERE id = ?`
+export const getTodoSQL = `SELECT * FROM ${TABLE_TODO}
+ WHERE id = ? AND deleted = FALSE AND uid = ? 
+ORDER BY updated_at DESC;
+`
 
-export const getTodosSQL = `SELECT * FROM ${TABLE_TODO} WHERE deleted = FALSE ORDER BY updated_at DESC`
+export const getTodosSQL = `SELECT * FROM ${TABLE_TODO}
+ WHERE deleted = FALSE AND uid = ? 
+ ORDER BY updated_at DESC;
+`
 
-export const upTodoSQL = `UPDATE ${TABLE_TODO} SET text = ?, completed = ? WHERE id = ?`
+export const upTodoSQL = `UPDATE ${TABLE_TODO} SET text = ?, completed = ? 
+ WHERE id = ? AND deleted = FALSE AND uid = ?;
+`
 
-export const rmTodoSQL = `UPDATE ${TABLE_TODO} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP WHERE id = ?`
+export const rmTodoSQL = `UPDATE ${TABLE_TODO} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP
+ WHERE id = ? AND deleted = FALSE AND uid = ?;
+`
 
-export const rmTodosSQL = `UPDATE ${TABLE_TODO} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP WHERE id IN (?)`
+export const rmTodosSQL = `UPDATE ${TABLE_TODO} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP
+ WHERE id IN (?) AND deleted = FALSE AND uid = ?; 
+`
