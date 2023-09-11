@@ -12,12 +12,12 @@ pnpm dev
 
 ### Run in production
 
-```bash
+```bashw
 pnpm build
 
 # then in dist
 pnpm install
 
 # set env variables, then
-node index.mjs
+node server.mjs
 ```

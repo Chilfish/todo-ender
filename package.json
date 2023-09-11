@@ -10,10 +10,10 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/server.ts",
     "build": "tsx scripts/build.ts",
     "build:rollup": "rollup -c",
-    "preview": "tsx dist/index.mjs",
+    "preview": "cd dist && node server.mjs",
     "lint": "eslint .",
     "postinstall": "npx simple-git-hooks"
   },

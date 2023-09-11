@@ -1,12 +1,12 @@
 import { type Request, type Response, Router } from 'express'
 import type { ResultSetHeader } from 'mysql2'
-import db, { TABLE } from './sql'
-import type { Todo, TodoSQL } from './types'
-import { assertParams, log } from './utils'
+import type { Todo, TodoSQL } from '~/types'
+import db, { TodoTable } from '~/db'
+import { assertParams, log } from '~/utils'
 
 async function getTodos(req: Request, res: Response) {
   db
-    .query<TodoSQL>(`SELECT * FROM ${TABLE} WHERE deleted = 0 ORDER BY updated_at DESC`)
+    .query<TodoSQL>(`SELECT * FROM ${TodoTable} WHERE deleted = 0 ORDER BY updated_at DESC`)
     .then(([rows]) => {
       res.json({
         data: rows,
@@ -29,7 +29,7 @@ async function getTodoById(req: Request, res: Response) {
   if (!assertParams({ id }, res))
     return
 
-  const sqlStr = `SELECT * FROM ${TABLE} WHERE id = ${id}`
+  const sqlStr = `SELECT * FROM ${TodoTable} WHERE id = ${id}`
 
   db
     .query<TodoSQL>(sqlStr)
@@ -54,12 +54,12 @@ async function addTodo(req: Request, res: Response) {
   if (!assertParams({ text }, res))
     return
 
-  const sqlStr = `INSERT INTO ${TABLE} (text) VALUES ('${text}')`
+  const sqlStr = `INSERT INTO ${TodoTable} (text) VALUES ('${text}')`
 
   db
     .query<ResultSetHeader>(sqlStr)
     .then(async ([rows]) => {
-      const [todo] = await db.query<TodoSQL>(`SELECT * FROM ${TABLE} WHERE id = ${rows.insertId}`)
+      const [todo] = await db.query<TodoSQL>(`SELECT * FROM ${TodoTable} WHERE id = ${rows.insertId}`)
       res.json({
         status: 'success',
         data: todo[0],
@@ -80,7 +80,7 @@ async function rmTodo(req: Request, res: Response) {
   if (!assertParams({ id }, res))
     return
 
-  const sqlStr = `UPDATE ${TABLE} SET deleted = 1 WHERE id = ${id}`
+  const sqlStr = `UPDATE ${TodoTable} SET deleted = 1 WHERE id = ${id}`
 
   db
     .query<ResultSetHeader>(sqlStr)
@@ -104,7 +104,7 @@ async function upTodo(req: Request, res: Response) {
   if (!assertParams({ id, completed, text }, res))
     return
 
-  const sqlStr = `UPDATE ${TABLE} SET completed = ${completed}, text = '${text}' WHERE id = ${id}`
+  const sqlStr = `UPDATE ${TodoTable} SET completed = ${completed}, text = '${text}' WHERE id = ${id}`
 
   db
     .query<ResultSetHeader>(sqlStr)
@@ -132,4 +132,5 @@ todoRouter
   .post('/rm', rmTodo)
   .post('/up', upTodo)
 
+export { todoRouter }
 export default todoRouter

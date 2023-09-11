@@ -4,11 +4,18 @@ import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import esbuild from 'rollup-plugin-esbuild'
 
-/** @type {import('rollup').RollupOptions} */
-export default {
-  input: 'src/index.ts',
+/** @type {import('rollup').RollupOptions[]} */
+const configs = []
+
+configs.push({
+  input: {
+    index: 'src/index.ts',
+    server: 'src/server.ts',
+    utils: 'src/utils/index.ts',
+  },
   output: {
-    file: 'dist/index.mjs',
+    dir: 'dist',
+    entryFileNames: '[name].mjs',
     format: 'es',
   },
   plugins: [
@@ -25,4 +32,6 @@ export default {
     'mysql2',
     'cors',
   ],
-}
+})
+
+export default configs

@@ -1,7 +1,8 @@
 import process from 'node:process'
-import 'dotenv/config'
 import { createPool } from 'mysql2'
-import { log } from './utils'
+import { TABLE, initDB as initTodo } from './todo'
+import { log } from '~/utils'
+import 'dotenv/config'
 
 const {
   MYSQL_PORT = 3306,
@@ -10,19 +11,6 @@ const {
   MYSQL_HOST = 'localhost',
   MYSQL_DB = 'todos',
 } = process.env
-
-export const TABLE = 'todos'
-
-const initDB = `CREATE TABLE IF NOT EXISTS ${TABLE} (
-  id INT NOT NULL AUTO_INCREMENT,
-  text VARCHAR(255) NOT NULL,
-  completed BOOLEAN NOT NULL DEFAULT FALSE,
-  deleted BOOLEAN NOT NULL DEFAULT FALSE,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-`
 
 export const db = createPool({
   host: MYSQL_HOST,
@@ -40,7 +28,7 @@ export const db = createPool({
   .promise()
 
 db
-  .query(initDB)
+  .query(initTodo)
   .then(() => {
     log('database connect success')
   })
@@ -49,3 +37,5 @@ db
   })
 
 export default db
+
+export const TodoTable = TABLE

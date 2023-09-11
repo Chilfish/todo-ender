@@ -21,7 +21,10 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "esnext",
-    "types": [],
+    "types": [
+      "node",
+      "express"
+    ],
     "noEmit": true
   },
   "exclude": [

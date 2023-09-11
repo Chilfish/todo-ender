@@ -1,14 +1,9 @@
-import process from 'node:process'
+import type { Request, Response } from 'express'
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 
-import todoRouter from './router'
-import { log } from './utils'
-
-const {
-  PORT = 3000,
-} = process.env
+import { todoRouter } from './routers'
 
 const app = express()
 app
@@ -18,14 +13,12 @@ app
   .use(express.static('public'))
 
 app
-  .get('/', (req, res) => {
-    res.send('Hello World!')
+  .get('/', (req: Request, res: Response) => {
+    res.send('hello world')
   })
-  .get('/api', (req, res) => {
+  .get('/api', (req: Request, res: Response) => {
     res.json({ message: 'hello api' })
   })
   .use('/api/todos', todoRouter)
 
-app.listen(PORT, () => {
-  log(`Server is running on http://localhost:${PORT}/`)
-})
+export default app

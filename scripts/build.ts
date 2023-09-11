@@ -41,7 +41,7 @@ async function copy() {
 
 export default async function build() {
   console.log('build start')
-  await fs.remove(path.resolve(root, 'dist'))
+  await fs.remove(path.resolve(root, 'dist/*'))
 
   exec('pnpm build:rollup', { stdio: 'inherit' })
 
