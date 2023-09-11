@@ -33,3 +33,8 @@ export interface UserAuth {
 export type UserSQL = User[] & RowDataPacket[]
 
 export type UserWithPasswordSQL = UserWithPassword[] & RowDataPacket[]
+
+export interface AuthBody {
+  username: string
+  password: string
+}

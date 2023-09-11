@@ -1,5 +1,3 @@
-import type { Response } from 'express'
-
 export * from './token'
 export * from './keys'
 
@@ -29,16 +27,13 @@ export function hasUndefined(obj: Record<string, unknown>) {
 
 export function assertParams(
   params: Record<string, unknown>,
-  res: Response,
 ) {
   const paramsStatus = hasUndefined(params)
   if (paramsStatus.length > 0) {
-    res.status(400).json({
-      status: 'error',
-      message: `Missing params: ${paramsStatus.join(', ')}`,
+    return createError({
+      statusMessage: `Missing params: ${paramsStatus.join(', ')}`,
+      statusCode: 401,
     })
-    return false
   }
-
-  return true
+  return null
 }
