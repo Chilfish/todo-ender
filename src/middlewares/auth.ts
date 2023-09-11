@@ -5,7 +5,7 @@ import { log, verifyToken } from '~/utils'
 import type { UserWithPasswordSQL } from '~/types'
 
 export async function auth(req: Request, res: Response, next: NextFunction) {
-  if (req.path.includes('/api/auth'))
+  if (req.path.includes('/auth'))
     return next()
 
   const token = req.headers.authorization?.split(' ')[1]
@@ -28,7 +28,7 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
   }
 
   db
-    .query<UserWithPasswordSQL>(getUserSQL, [uid])
+    .query<UserWithPasswordSQL>(getUserSQL, { id: uid })
     .then(([user]) => {
       if (!user.length) {
         return res.status(401).json({

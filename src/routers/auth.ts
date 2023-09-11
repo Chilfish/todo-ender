@@ -13,7 +13,7 @@ async function authUser(req: Request, res: Response) {
     return
 
   db
-    .query<UserWithPasswordSQL>(authUserSQL, [username, password])
+    .query<UserWithPasswordSQL>(authUserSQL, { username, password })
     .then(async ([row]) => {
       const user = row[0]
       if (!user)
@@ -40,9 +40,9 @@ async function register(req: Request, res: Response) {
     return
 
   db
-    .execute<ResultSetHeader>(addUserSQL, [username, password])
+    .execute<ResultSetHeader>(addUserSQL, { username, password })
     .then(async ([rows]) => {
-      const [user] = await db.query<UserWithPasswordSQL>(getUserSQL, [rows.insertId])
+      const [user] = await db.query<UserWithPasswordSQL>(getUserSQL, { id: rows.insertId })
 
       const data = await userWithToken(user[0])
       res.json(data)

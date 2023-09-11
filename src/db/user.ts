@@ -13,18 +13,30 @@ export const initUserDB = `CREATE TABLE IF NOT EXISTS ${TABLE_USER} (
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 `
 
-export const addUserSQL = `INSERT INTO ${TABLE_USER} (username, password) VALUES (?, ?);`
+export const addUserSQL = `INSERT INTO ${TABLE_USER} (username, password)
+ VALUES (:username, :password);
+`
 
-export const getUserSQL = `SELECT * FROM ${TABLE_USER} WHERE id = ?`
+export const getUserSQL = `SELECT * FROM ${TABLE_USER}
+ WHERE id = :id AND deleted = FALSE;
+`
 
-export const getUserByUsernameSQL = `SELECT * FROM ${TABLE_USER} WHERE username = ?`
+export const getUserByUsernameSQL = `SELECT * FROM ${TABLE_USER}
+ WHERE username = :username AND deleted = FALSE;
+`
 
-export const authUserSQL = `SELECT * FROM ${TABLE_USER} WHERE username = ? AND password = ?`
+export const authUserSQL = `SELECT * FROM ${TABLE_USER}
+ WHERE username = :username AND password = :password AND deleted = FALSE;
+`
+
+export const upUserSQL = `UPDATE ${TABLE_USER} SET username = :username, password = :password
+WHERE id = :id AND deleted = FALSE;
+`
+
+export const rmUserSQL = `UPDATE ${TABLE_USER} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP
+WHERE id = ? AND deleted = FALSE;
+`
+
+// only for admin //
 
 export const getUsersSQL = `SELECT * FROM ${TABLE_USER} ORDER BY updated_at DESC`
-
-export const upUserSQL = `UPDATE ${TABLE_USER} SET username = ?, password = ? WHERE id = ?`
-
-export const rmUserSQL = `UPDATE ${TABLE_USER} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP WHERE id = ?`
-
-export const rmUsersSQL = `UPDATE ${TABLE_USER} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP WHERE id IN (?)`

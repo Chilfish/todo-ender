@@ -20,12 +20,7 @@ export const db = createPool({
   database: MYSQL_DB,
   port: MYSQL_PORT as number,
 
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0,
-  multipleStatements: true, // 启用多语句查询支持
+  namedPlaceholders: true,
 })
   .promise()
 

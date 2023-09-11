@@ -1,5 +1,5 @@
 import { type Request, type Response, Router } from 'express'
-import type { ResultSetHeader } from 'mysql2'
+import type { ResultSetHeader } from 'mysql2/promise'
 import type { Todo, TodoSQL } from '~/types'
 import db from '~/db'
 import { assertParams, log } from '~/utils'
@@ -8,7 +8,7 @@ import { addTodoSQL, getTodoSQL, getTodosSQL, rmTodoSQL, upTodoSQL } from '~/db/
 async function getTodos(req: Request, res: Response) {
   const uid = req.body.uid as number
   db
-    .query<TodoSQL>(getTodosSQL, [uid])
+    .query<TodoSQL>(getTodosSQL, { uid })
     .then(([rows]) => {
       res.json({
         data: rows,
@@ -33,7 +33,7 @@ async function getTodoById(req: Request, res: Response) {
     return
 
   db
-    .query<TodoSQL>(getTodoSQL, [id, uid])
+    .query<TodoSQL>(getTodoSQL, { id, uid })
     .then(([rows]) => {
       res.json({
         data: rows[0],
@@ -58,9 +58,9 @@ async function addTodo(req: Request, res: Response) {
     return
 
   db
-    .query<ResultSetHeader>(addTodoSQL, [text, uid])
+    .query<ResultSetHeader>(addTodoSQL, { text, uid })
     .then(async ([rows]) => {
-      const [todo] = await db.query<TodoSQL>(getTodoSQL, [rows.insertId, uid])
+      const [todo] = await db.query<TodoSQL>(getTodoSQL, { id: rows.insertId, uid })
       res.json({
         status: 'success',
         data: todo[0],
@@ -83,11 +83,12 @@ async function rmTodo(req: Request, res: Response) {
     return
 
   db
-    .query<ResultSetHeader>(rmTodoSQL, [id, uid])
+    .query<ResultSetHeader>(rmTodoSQL, { id, uid })
     .then(([rows]) => {
+      const affected = rows.affectedRows
       res.json({
-        status: 'success',
-        data: rows.affectedRows,
+        status: affected ? 'success' : 'fail',
+        data: affected,
       })
     })
     .catch((err) => {
@@ -107,11 +108,12 @@ async function upTodo(req: Request, res: Response) {
     return
 
   db
-    .query<ResultSetHeader>(upTodoSQL, [id, completed, text, uid])
+    .query<ResultSetHeader>(upTodoSQL, { id, completed, text, uid })
     .then(([rows]) => {
+      const affected = rows.affectedRows
       res.json({
-        status: 'success',
-        data: rows.affectedRows,
+        status: affected ? 'success' : 'fail',
+        data: affected,
       })
     })
     .catch((err) => {
