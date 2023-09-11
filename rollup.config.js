@@ -3,9 +3,14 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import esbuild from 'rollup-plugin-esbuild'
+import fs from 'fs-extra'
 
 /** @type {import('rollup').RollupOptions[]} */
 const configs = []
+
+const packageJson = fs.readJsonSync('./package.json')
+
+const deps = Object.keys(packageJson.dependencies || {})
 
 configs.push({
   input: {
@@ -28,9 +33,7 @@ configs.push({
     }),
   ],
   external: [
-    'express',
-    'mysql2',
-    'cors',
+    ...deps,
   ],
 })
 
