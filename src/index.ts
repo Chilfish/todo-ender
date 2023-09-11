@@ -3,7 +3,8 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 
-import { todoRouter } from './routers'
+import { authRouter, todoRouter } from './routers'
+import { auth } from './middlewares'
 
 const app = express()
 app
@@ -11,6 +12,7 @@ app
   .use(express.json())
   .use(express.urlencoded({ extended: true }))
   .use(express.static('public'))
+  .use(auth)
 
 app
   .get('/', (req: Request, res: Response) => {
@@ -20,5 +22,6 @@ app
     res.json({ message: 'hello api' })
   })
   .use('/api/todos', todoRouter)
+  .use('/api/auth', authRouter)
 
 export default app

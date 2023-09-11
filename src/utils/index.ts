@@ -1,11 +1,17 @@
 import type { Response } from 'express'
 
+export * from './token'
+
 export function log(
-  message: string,
+  message: string | Record<string, unknown>,
   type: 'info' | 'warn' | 'error' = 'info',
 ) {
   const date = new Date().toLocaleString().split(' ')[1]
-  console.log(`${type}, [${date}]: ${message}`)
+
+  if (typeof message === 'object')
+    console.log(`${type}, [${date}]:`, message)
+  else
+    console.log(`${type}, [${date}]: ${message}`)
 }
 
 /**

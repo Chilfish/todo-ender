@@ -12,11 +12,13 @@ export const initUserDB = `CREATE TABLE IF NOT EXISTS ${TABLE_USER} (
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 `
 
-export const addUserSQL = `INSERT INTO ${TABLE_USER} (username, password) VALUES (?, ?)`
+export const addUserSQL = `INSERT INTO ${TABLE_USER} (username, password) VALUES (?, ?);`
 
 export const getUserSQL = `SELECT * FROM ${TABLE_USER} WHERE id = ?`
 
 export const getUserByUsernameSQL = `SELECT * FROM ${TABLE_USER} WHERE username = ?`
+
+export const authUserSQL = `SELECT * FROM ${TABLE_USER} WHERE username = ? AND password = ?`
 
 export const getUsersSQL = `SELECT * FROM ${TABLE_USER} ORDER BY updated_at DESC`
 

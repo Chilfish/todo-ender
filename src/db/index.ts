@@ -25,6 +25,7 @@ export const db = createPool({
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
+  multipleStatements: true, // 启用多语句查询支持
 })
   .promise()
 
