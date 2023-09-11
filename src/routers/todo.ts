@@ -1,12 +1,13 @@
 import { type Request, type Response, Router } from 'express'
 import type { ResultSetHeader } from 'mysql2'
 import type { Todo, TodoSQL } from '~/types'
-import db, { TodoTable } from '~/db'
+import db from '~/db'
 import { assertParams, log } from '~/utils'
+import { addTodoSQL, getTodoSQL, getTodosSQL, rmTodoSQL, upTodoSQL } from '~/db/todo'
 
 async function getTodos(req: Request, res: Response) {
   db
-    .query<TodoSQL>(`SELECT * FROM ${TodoTable} WHERE deleted = 0 ORDER BY updated_at DESC`)
+    .query<TodoSQL>(getTodosSQL)
     .then(([rows]) => {
       res.json({
         data: rows,
@@ -15,7 +16,7 @@ async function getTodos(req: Request, res: Response) {
       })
     })
     .catch((err) => {
-      log(`${err.message}`, 'error')
+      log(`at getTodos, ${err.message}`, 'error')
       res.status(500).json({
         message: err.message,
         status: 'error',
@@ -29,10 +30,8 @@ async function getTodoById(req: Request, res: Response) {
   if (!assertParams({ id }, res))
     return
 
-  const sqlStr = `SELECT * FROM ${TodoTable} WHERE id = ${id}`
-
   db
-    .query<TodoSQL>(sqlStr)
+    .query<TodoSQL>(getTodoSQL, [id])
     .then(([rows]) => {
       res.json({
         data: rows[0],
@@ -41,7 +40,7 @@ async function getTodoById(req: Request, res: Response) {
       })
     })
     .catch((err) => {
-      log(`${err.message}, SQL: ${sqlStr}`, 'error')
+      log(`at getTodoById, ${err.message}`, 'error')
       res.status(500).json({
         message: err.message,
         status: 'error',
@@ -54,19 +53,17 @@ async function addTodo(req: Request, res: Response) {
   if (!assertParams({ text }, res))
     return
 
-  const sqlStr = `INSERT INTO ${TodoTable} (text) VALUES ('${text}')`
-
   db
-    .query<ResultSetHeader>(sqlStr)
+    .query<ResultSetHeader>(addTodoSQL, [text])
     .then(async ([rows]) => {
-      const [todo] = await db.query<TodoSQL>(`SELECT * FROM ${TodoTable} WHERE id = ${rows.insertId}`)
+      const [todo] = await db.query<TodoSQL>(getTodoSQL, [rows.insertId])
       res.json({
         status: 'success',
         data: todo[0],
       })
     })
     .catch((err) => {
-      log(`${err.message}, SQL: ${sqlStr}`, 'error')
+      log(`at addTodo, ${err.message}`, 'error')
       res.status(500).json({
         message: err.message,
         status: 'error',
@@ -80,10 +77,8 @@ async function rmTodo(req: Request, res: Response) {
   if (!assertParams({ id }, res))
     return
 
-  const sqlStr = `UPDATE ${TodoTable} SET deleted = 1 WHERE id = ${id}`
-
   db
-    .query<ResultSetHeader>(sqlStr)
+    .query<ResultSetHeader>(rmTodoSQL, [id])
     .then(([rows]) => {
       res.json({
         status: 'success',
@@ -91,7 +86,7 @@ async function rmTodo(req: Request, res: Response) {
       })
     })
     .catch((err) => {
-      log(`${err.message}, SQL: ${sqlStr}`, 'error')
+      log(`at rmTodo, ${err.message}`, 'error')
       res.status(500).json({
         message: err.message,
         status: 'error',
@@ -104,10 +99,8 @@ async function upTodo(req: Request, res: Response) {
   if (!assertParams({ id, completed, text }, res))
     return
 
-  const sqlStr = `UPDATE ${TodoTable} SET completed = ${completed}, text = '${text}' WHERE id = ${id}`
-
   db
-    .query<ResultSetHeader>(sqlStr)
+    .query<ResultSetHeader>(upTodoSQL, [id, completed, text])
     .then(([rows]) => {
       res.json({
         status: 'success',
@@ -115,7 +108,7 @@ async function upTodo(req: Request, res: Response) {
       })
     })
     .catch((err) => {
-      log(`${err.message}, SQL: ${sqlStr}`, 'error')
+      log(`at upTodo, ${err.message}`, 'error')
       res.status(500).json({
         message: err.message,
         status: 'error',

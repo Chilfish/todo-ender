@@ -1,6 +1,6 @@
 import process from 'node:process'
 import { createPool } from 'mysql2'
-import { TABLE, initDB as initTodo } from './todo'
+import { initDB as initTodo } from './todo'
 import { log } from '~/utils'
 import 'dotenv/config'
 
@@ -37,5 +37,3 @@ db
   })
 
 export default db
-
-export const TodoTable = TABLE
