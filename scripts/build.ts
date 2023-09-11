@@ -16,7 +16,7 @@ const copyDest = {
 async function genPackJson() {
   const packageJson = await fs.readJson(path.resolve(root, 'package.json'))
 
-  const rest = {}
+  const rest: Record<string, unknown> = {}
 
   Object.keys(packageJson)
     .forEach((key) => {
@@ -25,6 +25,10 @@ async function genPackJson() {
       )
         rest[key] = packageJson[key]
     })
+
+  rest.scripts = {
+    start: 'node server.mjs',
+  }
 
   await fs.writeJson(path.resolve(root, 'dist/package.json'), rest, {
     spaces: 2,

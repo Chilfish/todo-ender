@@ -15,13 +15,10 @@ app
 
 app
   .get('/', (req: Request, res: Response) => {
-    res.send('hello world')
-  })
-  .get('/api', (req: Request, res: Response) => {
     res.json({ message: 'hello api' })
   })
-  .use('/api', auth)
-  .use('/api/todos', todoRouter)
-  .use('/api/auth', authRouter)
+  .use('/', auth)
+  .use('/todos', todoRouter)
+  .use('/auth', authRouter)
 
 export default app

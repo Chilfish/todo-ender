@@ -10,6 +10,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "start": "tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
     "build": "tsx scripts/build.ts",
     "build:rollup": "rollup -c",
