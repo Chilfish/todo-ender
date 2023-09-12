@@ -4,4 +4,6 @@ export default defineNitroConfig({
       target: 'esnext',
     },
   },
+  // should return the json response manually
+  errorHandler: '~/utils/nitroErrorHandler.ts',
 })

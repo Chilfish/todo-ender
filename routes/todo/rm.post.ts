@@ -10,20 +10,16 @@ export default defineEventHandler(async (event) => {
   if (_status)
     return _status
 
-  db
-    .query<ResultSetHeader>(rmTodoSQL, { id, uid })
-    .then(([rows]) => {
-      const affected = rows.affectedRows
-      return {
-        status: affected ? 'success' : 'fail',
-        data: affected,
-      }
-    })
-    .catch((err) => {
-      log(`at rmTodo, ${err.message}`, 'error')
-      return createError({
-        statusMessage: err.message,
-        statusCode: 500,
-      })
-    })
+  try {
+    const [res] = await db.query<ResultSetHeader>(rmTodoSQL, { id, uid })
+
+    const affected = res.affectedRows
+    return {
+      status: affected ? 'success' : 'fail',
+      data: affected,
+    }
+  }
+  catch (error) {
+    await dbErrorHandler(error)
+  }
 })

@@ -11,21 +11,16 @@ export default defineEventHandler(async (event) => {
   if (_status)
     return _status
 
-  db
-    .query<ResultSetHeader>(addTodoSQL, { text, uid })
-    .then(async ([rows]) => {
-      const [todo] = await db.query<TodoSQL>(getTodoSQL, { id: rows.insertId, uid })
-      return {
-        status: 'success',
-        data: todo[0],
-      }
-    })
-    .catch((err) => {
-      log(`at addTodo, ${err.message}`, 'error')
+  try {
+    const [res] = await db.query<ResultSetHeader>(addTodoSQL, { text, uid })
+    const [todo] = await db.query<TodoSQL>(getTodoSQL, { id: res.insertId, uid })
 
-      return createError({
-        statusMessage: err.message,
-        statusCode: 500,
-      })
-    })
+    return {
+      status: 'success',
+      data: todo[0],
+    }
+  }
+  catch (error) {
+    await dbErrorHandler(error)
+  }
 })

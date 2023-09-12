@@ -5,32 +5,31 @@ import type { AuthBody, UserWithPasswordSQL } from '~/types'
 export default defineEventHandler(async (event) => {
   const { username, password } = await readBody<AuthBody>(event)
 
-  assertParams({ username, password })
+  const _status = assertParams({ username, password })
+  if (_status)
+    return _status
 
-  db
-    .query<UserWithPasswordSQL>(authUserSQL, { username, password })
-    .then(async ([row]) => {
-      const user = row[0]
-      if (!user) {
-        return createError({
-        })
-      }
+  try {
+    const [res] = await db.query<UserWithPasswordSQL>(authUserSQL, { username, password })
+    const user = res[0]
 
-      if (user.password !== password) {
-        return createError({
-          statusMessage: 'Invalid password',
-          statusCode: 401,
-        })
-      }
-
-      return await userWithToken(user)
-    })
-    .catch((err) => {
-      log(`authUser, ${err.message}`, 'error')
-
+    if (!user) {
       return createError({
-        statusMessage: err.message,
-        statusCode: 500,
+        statusMessage: 'Invalid username',
+        statusCode: 401,
       })
-    })
+    }
+
+    if (user.password !== password) {
+      return createError({
+        statusMessage: 'Invalid password',
+        statusCode: 401,
+      })
+    }
+
+    return await userWithToken(user)
+  }
+  catch (error) {
+    await dbErrorHandler(error)
+  }
 })

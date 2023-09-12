@@ -11,20 +11,16 @@ export default defineEventHandler(async (event) => {
   if (_status)
     return _status
 
-  db
-    .query<ResultSetHeader>(upTodoSQL, { id, completed, text, uid })
-    .then(([rows]) => {
-      const affected = rows.affectedRows
-      return {
-        status: affected ? 'success' : 'fail',
-        data: affected,
-      }
-    })
-    .catch((err) => {
-      log(`at upTodo, ${err.message}`, 'error')
-      return createError({
-        statusMessage: err.message,
-        statusCode: 500,
-      })
-    })
+  try {
+    const [res] = await db.query<ResultSetHeader>(upTodoSQL, { id, completed, text, uid })
+
+    const affected = res.affectedRows
+    return {
+      status: affected ? 'success' : 'fail',
+      data: affected,
+    }
+  }
+  catch (error) {
+    await dbErrorHandler(error)
+  }
 })

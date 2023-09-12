@@ -25,7 +25,8 @@ src/mock/mock.ts
 
 out/
 
-.env
+.env*
+!.env.example
 *.pem
 .nitro
 .output

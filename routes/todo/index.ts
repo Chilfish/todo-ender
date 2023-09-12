@@ -9,21 +9,15 @@ export default defineEventHandler(async (event) => {
   if (_status)
     return _status
 
-  db
-    .query<TodoSQL>(getTodosSQL, { uid })
-    .then(([rows]) => {
-      return {
-        data: rows,
-        count: rows.length,
-        status: 'success',
-      }
-    })
-    .catch((err) => {
-      log(`at getTodos, ${err.message}`, 'error')
-
-      return createError({
-        statusMessage: err.message,
-        statusCode: 500,
-      })
-    })
+  try {
+    const [res] = await db.query<TodoSQL>(getTodosSQL, { uid })
+    return {
+      data: res,
+      count: res.length,
+      status: 'success',
+    }
+  }
+  catch (error) {
+    await dbErrorHandler(error)
+  }
 })

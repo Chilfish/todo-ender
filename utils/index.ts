@@ -1,5 +1,6 @@
 export * from './token'
 export * from './keys'
+export * from './errorHandler'
 
 export function log(
   message: string | Record<string, unknown>,
