@@ -10,14 +10,10 @@ pnpm install
 pnpm dev
 ```
 
-### Run in production
+### Deploy on Vercel
 
-```bashw
-pnpm build
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Chilfish/todo-ender)
 
-# then in dist
-pnpm install
+Set the environment variables in Vercel, see `.env.example` for reference. (at `https://vercel.com/${your_name}/todo-ender/settings/environment-variables`).
 
-# set env variables, then
-node server.mjs
-```
+Note that, you should generate the PUBLIC_KEY and PRIVATE_KEY by yourself, and your database info.

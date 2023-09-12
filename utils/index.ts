@@ -1,6 +1,10 @@
+import process from 'node:process'
+
 export * from './token'
 export * from './keys'
 export * from './errorHandler'
+
+export const isDev = process.env.NODE_ENV === 'development'
 
 export function log(
   message: string | Record<string, unknown>,
