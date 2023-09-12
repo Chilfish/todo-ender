@@ -6,17 +6,10 @@ import db from '~/db'
 export default defineEventHandler(async (event) => {
   const { username, password } = await readBody<AuthBody>(event)
 
-  const _status = assertParams({ username, password })
-  if (_status)
-    return _status
+  assertParams({ username, password })
 
-  try {
-    const [res] = await db.query<ResultSetHeader>(addUserSQL, { username, password })
-    const [user] = await db.query<UserWithPasswordSQL>(getUserSQL, { id: res.insertId })
+  const [res] = await db.query<ResultSetHeader>(addUserSQL, { username, password })
+  const [user] = await db.query<UserWithPasswordSQL>(getUserSQL, { id: res.insertId })
 
-    return await userWithToken(user[0])
-  }
-  catch (error) {
-    await dbErrorHandler(error)
-  }
+  return await userWithToken(user[0])
 })

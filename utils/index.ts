@@ -35,10 +35,9 @@ export function assertParams(
 ) {
   const paramsStatus = hasUndefined(params)
   if (paramsStatus.length > 0) {
-    return createError({
+    throw createError({
       statusMessage: `Missing params: ${paramsStatus.join(', ')}`,
-      statusCode: 401,
+      statusCode: 400,
     })
   }
-  return false
 }

@@ -34,17 +34,37 @@ export const db = createPool({
 })
   .promise()
 
+const createDB = `CREATE DATABASE IF NOT EXISTS ${MYSQL_DB};`
+
 export async function initDB() {
+  try {
+    await db.query(createDB)
+    log('Database created')
+  }
+  catch (error: any) {
+    log(`Database creation failed: ${error.message}`, 'error')
+    return createError({
+      message: error.message,
+      statusCode: 500,
+    })
+  }
+}
+
+export async function initTables() {
   try {
     await Promise.all([
       db.query(initUserDB),
       db.query(initTodoDB),
     ])
 
-    log('Database connected')
+    log('Tables initialized')
   }
   catch (error: any) {
-    log(`Database connected failed: ${error.message}`, 'error')
+    log(`Tables initialized failed: ${error.message}`, 'error')
+    return createError({
+      message: error.message,
+      statusCode: 500,
+    })
   }
 }
 

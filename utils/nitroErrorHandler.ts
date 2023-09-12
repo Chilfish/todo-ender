@@ -1,11 +1,12 @@
 import type { NitroErrorHandler } from 'nitropack'
+import type { DBError } from './errorHandler'
 
-export default <NitroErrorHandler> function (error, event) {
+export default <NitroErrorHandler> async function (error, event) {
+  const err = await myErrorHandler(error as unknown as DBError)
+
   const res = event.node.res
   res.setHeader('Content-Type', 'application/json')
-  const { cause, ...err } = error
+  res.statusCode = err.statusCode
 
-  res.end(JSON.stringify({
-    ...err,
-  }))
+  res.end(JSON.stringify(err.cause))
 }
