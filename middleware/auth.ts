@@ -1,7 +1,10 @@
 export default defineEventHandler(async (event) => {
-  const token = getCookie(event, 'Bearer')
+  if (getRequestURL(event).toString().includes('auth'))
+    return
 
-  if (!token) {
+  const token = getHeader(event, 'Authorization').trim().split(' ')[1]
+
+  if (token === 'undefined' || '') {
     return createError({
       statusMessage: 'Unauthorized',
       statusCode: 401,
@@ -9,10 +12,10 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const { id } = await verifyToken(token!)
+    const { id } = await verifyToken(token)
     event.context.uid = id
   }
-  catch (error: any) {
+  catch (error) {
     return createError({
       statusMessage: 'Unauthorized',
       statusCode: 401,
