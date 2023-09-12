@@ -1,7 +1,6 @@
 import type { ResultSetHeader } from 'mysql2/promise'
 import type { AuthBody, UserWithPasswordSQL } from '~/types'
 import { addUserSQL, getUserSQL } from '~/db/user'
-import { assertParams, log, userWithToken } from '~/utils'
 import db from '~/db'
 
 export default defineEventHandler(async (event) => {

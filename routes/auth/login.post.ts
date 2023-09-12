@@ -1,7 +1,6 @@
 import db from '~/db'
 import { authUserSQL } from '~/db/user'
 import type { AuthBody, UserWithPasswordSQL } from '~/types'
-import { assertParams, log, userWithToken } from '~/utils'
 
 export default defineEventHandler(async (event) => {
   const { username, password } = await readBody<AuthBody>(event)

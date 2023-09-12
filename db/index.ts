@@ -2,7 +2,6 @@ import process from 'node:process'
 import { createPool } from 'mysql2'
 import { initUserDB } from './user'
 import { initTodoDB } from './todo'
-import { log } from '~/utils'
 import 'dotenv/config'
 
 const {

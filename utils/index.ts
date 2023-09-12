@@ -35,5 +35,5 @@ export function assertParams(
       statusCode: 401,
     })
   }
-  return null
+  return false
 }
