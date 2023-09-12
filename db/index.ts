@@ -1,9 +1,10 @@
 import process from 'node:process'
+import dotenv from 'dotenv'
 import { createPool } from 'mysql2'
 import { initUserDB } from './user'
 import { initTodoDB } from './todo'
-import { log } from '~/utils'
-import 'dotenv/config'
+
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
 const {
   MYSQL_PORT = 3306,

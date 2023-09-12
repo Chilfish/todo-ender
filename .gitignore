@@ -12,7 +12,6 @@ dist
 dist-ssr
 *.local
 
-
 .idea
 .DS_Store
 *.suo
@@ -21,13 +20,15 @@ dist-ssr
 *.sln
 *.sw?
 
-.vercel
-
 components.d.ts
 src/mock/mock.ts
 
-.vercel
 out/
 
-.env
+.env*
+!.env.example
 *.pem
+.nitro
+.output
+.dist
+.vercel
