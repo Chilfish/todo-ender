@@ -1,4 +1,5 @@
 export default defineNitroConfig({
+  preset: 'vercel',
   esbuild: {
     options: {
       target: 'esnext',
