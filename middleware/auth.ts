@@ -3,13 +3,22 @@ import { getUserSQL } from '~/db/user'
 import type { UserSQL } from '~/types'
 
 export default defineEventHandler(async (event) => {
-  const authReg = ['/todo']
+  const authRoutes = ['/todo'].map(route => new RegExp(`^${route}/?.*$`))
   const path = event.path
 
-  if (!authReg.some(reg => reg.split('/').includes(path.split('/')[1])))
+  const isAuthRoute = authRoutes.some(route => route.test(path))
+
+  if (!isAuthRoute || path === '/')
     return
 
   const token = getHeader(event, 'Authorization')?.split(' ')?.[1]
+
+  if (!token || token.trim() === '') {
+    return createError({
+      statusCode: 401,
+      message: 'Unauthorized',
+    })
+  }
 
   const { id } = await verifyToken(token)
   const [res] = await db.query<UserSQL>(getUserSQL, { id })

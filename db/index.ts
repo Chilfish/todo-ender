@@ -11,7 +11,7 @@ const {
   MYSQL_USER = 'root',
   MYSQL_PASS = '123456',
   MYSQL_HOST = 'localhost',
-  MYSQL_DB = 'todos',
+  MYSQL_DB = 'todo',
   MYSQL_SSL = 'false',
 } = process.env
 
@@ -34,22 +34,6 @@ export const db = createPool({
 })
   .promise()
 
-const createDB = `CREATE DATABASE IF NOT EXISTS ${MYSQL_DB};`
-
-export async function initDB() {
-  try {
-    await db.query(createDB)
-    log('Database created')
-  }
-  catch (error: any) {
-    log(`Database creation failed: ${error.message}`, 'error')
-    return createError({
-      message: error.message,
-      statusCode: 500,
-    })
-  }
-}
-
 export async function initTables() {
   try {
     await Promise.all([
@@ -58,6 +42,10 @@ export async function initTables() {
     ])
 
     log('Tables initialized')
+    return createError({
+      message: 'Tables initialized, please try again',
+      statusCode: 200,
+    })
   }
   catch (error: any) {
     log(`Tables initialized failed: ${error.message}`, 'error')

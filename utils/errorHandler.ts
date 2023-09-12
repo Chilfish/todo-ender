@@ -1,5 +1,5 @@
 import type { QueryError } from 'mysql2'
-import { initDB, initTables } from '~/db'
+import { initTables } from '~/db'
 
 export type DBError = QueryError & {
   cause?: QueryError
@@ -12,9 +12,6 @@ export async function myErrorHandler(
 
   try {
     switch (code) {
-      case 'ER_BAD_DB_ERROR':
-        return await initDB()
-
       case 'ER_NO_SUCH_TABLE':
         return await initTables()
 
