@@ -8,5 +8,5 @@ export default defineNitroConfig({
     },
   },
   // should return the json response manually
-  errorHandler: '~/utils/nitroErrorHandler.ts',
+  errorHandler: '~/error/nitroErrorHandler.ts',
 })

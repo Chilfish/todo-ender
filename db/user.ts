@@ -8,6 +8,7 @@ export const initUserDB = `CREATE TABLE IF NOT EXISTS ${TABLE_USER} (
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  level ENUM('admin', 'user') NOT NULL DEFAULT 'user',
   PRIMARY KEY (id),
   UNIQUE (username)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -34,9 +35,11 @@ WHERE id = :id AND deleted = FALSE;
 `
 
 export const rmUserSQL = `UPDATE ${TABLE_USER} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP
-WHERE id = ? AND deleted = FALSE;
+WHERE id = :id AND deleted = FALSE;
 `
 
 // only for admin //
 
-export const getUsersSQL = `SELECT * FROM ${TABLE_USER} ORDER BY updated_at DESC`
+export const getUsersSQL = `SELECT * FROM ${TABLE_USER}
+ ORDER BY id DESC;
+`

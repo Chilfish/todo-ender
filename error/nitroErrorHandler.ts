@@ -1,5 +1,5 @@
 import type { NitroErrorHandler } from 'nitropack'
-import type { DBError } from './errorHandler'
+import { type DBError, myErrorHandler } from './errorHandler'
 
 export default <NitroErrorHandler> async function (error, event) {
   const err = await myErrorHandler(error as unknown as DBError)

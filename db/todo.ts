@@ -29,6 +29,12 @@ export const upTodoSQL = `UPDATE ${TABLE_TODO} SET text = :text, completed = :co
  WHERE id = :id AND deleted = FALSE AND uid = :uid;
 `
 
-export const rmTodoSQL = `UPDATE ${TABLE_TODO} SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP
- WHERE id = :id AND deleted = FALSE AND uid = :uid;
+export const rmTodoSQL = `UPDATE ${TABLE_TODO}
+SET deleted    = TRUE,
+    deleted_at = CURRENT_TIMESTAMP
+WHERE id = :id
+  AND deleted = FALSE
+  AND uid = :uid;
 `
+
+export const getAllTodosSQL = `SELECT * FROM ${TABLE_TODO}`

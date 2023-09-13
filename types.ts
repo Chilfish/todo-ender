@@ -12,6 +12,8 @@ export interface Todo {
 
 export type TodoSQL = Todo[] & RowDataPacket[]
 
+export type UserLevel = 'admin' | 'user'
+
 export interface User {
   id: number
   username: string
@@ -19,6 +21,7 @@ export interface User {
   deleted_at: string
   created_at: string
   updated_at: string
+  level: UserLevel
 }
 
 export interface UserWithPassword extends User {

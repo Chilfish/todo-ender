@@ -3,7 +3,7 @@ import db from '~/db'
 import { rmTodoSQL } from '~/db/todo'
 
 export default defineEventHandler(async (event) => {
-  const id = await readBody(event) as { id: number }
+  const { id } = await readBody(event) as { id: number }
   const uid = event.context.uid as number
 
   assertParams({ id })

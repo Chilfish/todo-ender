@@ -1,4 +1,5 @@
 import type { QueryError } from 'mysql2'
+import type { ErrorCode } from '.'
 import { initTables } from '~/db'
 
 export type DBError = QueryError & {
@@ -8,7 +9,7 @@ export type DBError = QueryError & {
 export async function myErrorHandler(
   error: DBError,
 ) {
-  const code = error.cause?.code || error.code
+  const code = (error.cause?.code || error.code) as ErrorCode
 
   try {
     switch (code) {
@@ -25,6 +26,12 @@ export async function myErrorHandler(
         return createError({
           message: 'Unauthorized',
           statusCode: 401,
+        })
+
+      case 'not_admin':
+        return createError({
+          message: 'You have no permission to do this',
+          statusCode: 403,
         })
 
       default:
