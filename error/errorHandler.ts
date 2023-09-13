@@ -10,7 +10,7 @@ export async function myErrorHandler(
   error: DBError,
 ) {
   const code = (error.cause?.code || error.code) as ErrorCode
-
+  log({ error })
   try {
     switch (code) {
       case 'ER_NO_SUCH_TABLE':
@@ -23,6 +23,7 @@ export async function myErrorHandler(
         })
 
       case 'ERR_JWS_SIGNATURE_VERIFICATION_FAILED':
+      case 'ERR_JWS_INVALID':
         return createError({
           message: 'Unauthorized',
           statusCode: 401,

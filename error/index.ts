@@ -10,6 +10,7 @@ const errorCodes = [
 
   // jose error codes
   'ERR_JWS_SIGNATURE_VERIFICATION_FAILED',
+  'ERR_JWS_INVALID',
 ] as const
 
 export type ErrorCode = typeof errorCodes[number]
