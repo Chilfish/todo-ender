@@ -7,6 +7,9 @@ export default defineNitroConfig({
       minify: true,
     },
   },
+  routeRules: {
+    '/**': { cors: true },
+  },
   // should return the json response manually
   errorHandler: '~/error/nitroErrorHandler.ts',
 })
