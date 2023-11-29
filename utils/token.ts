@@ -17,7 +17,9 @@ export async function createToken(payload: any) {
 export async function verifyToken(token: string) {
   const { payload } = await compactVerify(token, ecPublicKey)
 
-  return JSON.parse(payload.toString()) as {
+  const data = new TextDecoder().decode(payload)
+
+  return JSON.parse(data) as {
     id: number
     username: string
   }
