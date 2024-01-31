@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import { exportPKCS8, exportSPKI, generateKeyPair, importPKCS8, importSPKI } from 'jose'
 import 'dotenv/config'
 
-export const alg = 'ES256'
+export const alg = 'RS256'
 
 const {
   PRIVATE_KEY,
@@ -47,8 +47,8 @@ export async function getKeys() {
       : [PRIVATE_KEY, PUBLIC_KEY]
 
     const [ecPublicKey, ecPrivateKey] = await Promise.all([
-      importSPKI(publicKey, alg),
-      importPKCS8(privateKey, alg),
+      importSPKI(publicKey!, alg),
+      importPKCS8(privateKey!, alg),
     ])
 
     return {

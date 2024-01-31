@@ -2,7 +2,7 @@ import db from '~/db'
 import { getUsersSQL } from '~/db/user'
 import type { UserSQL } from '~/types'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (_event) => {
   const [res] = await db.query<UserSQL>(getUsersSQL)
 
   return {

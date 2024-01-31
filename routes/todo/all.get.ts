@@ -2,7 +2,7 @@ import type { TodoSQL } from '~/types'
 import db from '~/db'
 import { getAllTodosSQL } from '~/db/todo'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (_event) => {
   const [res] = await db.query<TodoSQL>(getAllTodosSQL)
 
   return {

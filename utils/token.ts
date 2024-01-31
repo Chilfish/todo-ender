@@ -1,16 +1,17 @@
 import { Buffer } from 'node:buffer'
 import { CompactSign, compactVerify } from 'jose'
+
 import { alg, getKeys } from './keys'
-import type { UserWithPassword } from '~/types'
+import { TOKEN_EXP } from '~/constants'
+import type { User, UserWithToken, uid } from '~/types'
 
 const { ecPrivateKey, ecPublicKey } = await getKeys()
-const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30
 
 export async function createToken(payload: any) {
   return await new CompactSign(
     Buffer.from(JSON.stringify(payload), 'utf8'),
   )
-    .setProtectedHeader({ alg, exp })
+    .setProtectedHeader({ alg, exp: TOKEN_EXP })
     .sign(ecPrivateKey)
 }
 
@@ -20,19 +21,16 @@ export async function verifyToken(token: string) {
   const data = new TextDecoder().decode(payload)
 
   return JSON.parse(data) as {
-    id: number
-    username: string
+    id: uid
+    name: string
   }
 }
 
-export async function userWithToken(user: UserWithPassword) {
-  const { password: __dirname, ...userWithoutPass } = user
-
-  const token = await createToken({ id: user.id, username: user.username })
+export async function userWithToken(user: User): Promise<UserWithToken> {
+  const token = await createToken({ id: user.id, name: user.name })
 
   return {
-    data: userWithoutPass,
+    user,
     token,
-    status: 'success',
   }
 }
